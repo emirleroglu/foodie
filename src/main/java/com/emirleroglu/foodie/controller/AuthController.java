@@ -1,6 +1,8 @@
 package com.emirleroglu.foodie.controller;
 
+import com.emirleroglu.foodie.payload.request.LoginRequest;
 import com.emirleroglu.foodie.payload.request.SignupRequest;
+import com.emirleroglu.foodie.payload.response.LoginResponse;
 import com.emirleroglu.foodie.payload.response.MessageResponse;
 import com.emirleroglu.foodie.payload.response.UserResult;
 import com.emirleroglu.foodie.service.AppUserService;
@@ -40,5 +42,22 @@ public class AuthController {
 
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody LoginRequest request) {
+        LoginResponse result = service.login(request);
+        if (result.getResult() == UserResult.WrongPassword) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new LoginResponse(result.getResult(), result.getId()));
+        }
+        if (result.getResult() == UserResult.UnknownUser) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new LoginResponse(result.getResult(), result.getId()));
+        }
+
+        return ResponseEntity.ok(new LoginResponse(result.getResult(), result.getId()));
     }
 }

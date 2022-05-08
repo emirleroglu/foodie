@@ -5,5 +5,6 @@ public enum UserResult {
     UnknownUser,
     WrongPassword,
     takenUsername,
-    takenEmail
+    takenEmail,
+
 }
