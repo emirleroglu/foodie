@@ -1,5 +1,6 @@
 package com.emirleroglu.foodie.controller;
 
+import com.emirleroglu.foodie.model.AppUser;
 import com.emirleroglu.foodie.payload.request.LoginRequest;
 import com.emirleroglu.foodie.payload.request.SignupRequest;
 import com.emirleroglu.foodie.payload.response.LoginResponse;
@@ -8,12 +9,10 @@ import com.emirleroglu.foodie.payload.response.UserResult;
 import com.emirleroglu.foodie.service.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -59,5 +58,12 @@ public class AuthController {
         }
 
         return ResponseEntity.ok(new LoginResponse(result.getResult(), result.getId()));
+    }
+
+    @GetMapping("/contains")
+    public ResponseEntity<?> getAppUserLike(@RequestParam String username) {
+        List<AppUser> userList = service.getAppUserLike(username);
+
+        return ResponseEntity.ok(userList);
     }
 }
