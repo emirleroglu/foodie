@@ -1,7 +1,8 @@
-package com.emirleroglu.foodie.service;
+package com.emirleroglu.foodie.service.Impl;
 
 import com.emirleroglu.foodie.model.Preferences;
 import com.emirleroglu.foodie.repository.PreferencesRepository;
+import com.emirleroglu.foodie.service.PreferencesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.emirleroglu.foodie.service;
+package com.emirleroglu.foodie.service.Impl;
 
 import com.emirleroglu.foodie.model.AppUser;
 import com.emirleroglu.foodie.payload.request.LoginRequest;
@@ -6,6 +6,7 @@ import com.emirleroglu.foodie.payload.request.SignupRequest;
 import com.emirleroglu.foodie.payload.response.LoginResponse;
 import com.emirleroglu.foodie.payload.response.UserResult;
 import com.emirleroglu.foodie.repository.AppUserRepository;
+import com.emirleroglu.foodie.service.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
