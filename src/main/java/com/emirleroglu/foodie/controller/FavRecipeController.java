@@ -21,9 +21,14 @@ public class FavRecipeController {
 
     @PostMapping("/create")
     ResponseEntity<?> createFavRecipe(@RequestBody FavRecipe recipe) {
-        service.createFavRecipe(recipe);
+        FavRecipe favRecipe = service.createFavRecipe(recipe);
+        if (favRecipe.getSpoonApiId() == null) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Aynı SpoonID var.Değiştirin "));
+        }
         return ResponseEntity
-                .ok(recipe);
+                .ok(favRecipe);
     }
 
     @DeleteMapping("/delete")

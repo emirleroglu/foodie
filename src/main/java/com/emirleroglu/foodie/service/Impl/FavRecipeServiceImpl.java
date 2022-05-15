@@ -27,6 +27,9 @@ public class FavRecipeServiceImpl implements FavRecipeService {
     @Override
     public FavRecipe createFavRecipe(FavRecipe recipe) {
         //  FavRecipe myRecipe = new FavRecipe(recipe.getTitle(), recipe.getSpoonApiId(), recipe.getAppUser(), recipe.getImageURL());
+        if (repository.existsFavRecipeBySpoonApiId(recipe.getSpoonApiId())) {
+            return new FavRecipe();
+        }
 
         repository.save(recipe);
         return recipe;

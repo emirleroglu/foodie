@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface FavRecipeRepository extends JpaRepository<FavRecipe, Long> {
     List<FavRecipe> getFavRecipeRepositoryByAppUserId(Long id);
+
+    Boolean existsFavRecipeBySpoonApiId(Long id);
 }
