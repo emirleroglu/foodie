@@ -1,5 +1,7 @@
 package com.emirleroglu.foodie.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -21,10 +23,12 @@ public class AppUser {
     @NotBlank
     @Size(max = 50)
     @Email
+    @JsonIgnore
     private String email;
 
     @NotBlank
     @Size(max = 120)
+    @JsonIgnore
     private String password;
 
     public AppUser(String username, String email, String password) {

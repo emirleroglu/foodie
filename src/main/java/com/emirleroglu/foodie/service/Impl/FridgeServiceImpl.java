@@ -39,7 +39,7 @@ public class FridgeServiceImpl implements FridgeService {
 
     @Override
     public List<FridgeUserRelation> getRelationByAppUserId(Long id) {
-        return fridgeUserRelationRepository.getFridgeUserRelationByAppUserId(id);
+        return fridgeUserRelationRepository.getFridgeUserRelationByAppUserIdAndStatusTrue(id);
     }
 
     @Override

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface FridgeUserRelationRepository extends JpaRepository<FridgeUserRelation, Long> {
-    List<FridgeUserRelation> getFridgeUserRelationByAppUserId(Long id);
+    List<FridgeUserRelation> getFridgeUserRelationByAppUserIdAndStatusTrue(Long id);
 
     List<FridgeUserRelation> getFridgeUserRelationByFridgeId(Long id);
 
