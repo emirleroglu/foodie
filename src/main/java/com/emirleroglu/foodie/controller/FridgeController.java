@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/fridge")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class FridgeController {
 
     FridgeService service;
