@@ -16,7 +16,7 @@ import java.io.InputStream;
 public class FireStoreConfig {
     @Bean
     public Firestore FirestoreDb() throws IOException {
-        InputStream serviceAccount = new FileInputStream("foodiefribase-e0a27429f09b.json");
+        InputStream serviceAccount = new FileInputStream("foodiefribase-13f79058f565.json");
         GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(credentials)
