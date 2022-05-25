@@ -20,4 +20,6 @@ public interface FridgeService {
 
     void updateRelationStatus(Long id);
 
+    void deleteRelation(Long id);
+
 }

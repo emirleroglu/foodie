@@ -61,4 +61,9 @@ public class FridgeServiceImpl implements FridgeService {
 
 
     }
+
+    @Override
+    public void deleteRelation(Long id) {
+        fridgeUserRelationRepository.deleteById(id);
+    }
 }

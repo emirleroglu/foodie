@@ -84,6 +84,13 @@ public class FridgeController {
     public ResponseEntity<?> acceptFridgeByRelationId(@RequestParam Long relationId) {
         service.updateRelationStatus(relationId);
         return ResponseEntity
-                .ok(new MessageResponse("Doğru oldu:))"));
+                .ok(new MessageResponse("Kabul edildi."));
+    }
+
+    @PostMapping("/declineFridge")
+    public ResponseEntity<?> declineFridgeRelation(@RequestParam Long relationId) {
+        service.deleteRelation(relationId);
+        return ResponseEntity
+                .ok(new MessageResponse("Silindi."));
     }
 }
