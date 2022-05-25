@@ -31,11 +31,19 @@ public class AppUser {
     @JsonIgnore
     private String password;
 
-    public AppUser(String username, String email, String password) {
+    private Boolean firstLogin;
 
+    public AppUser(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
+    }
+
+    public AppUser(String username, String email, String password, Boolean firstLogin) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.firstLogin = firstLogin;
     }
 
     public AppUser() {
@@ -72,6 +80,14 @@ public class AppUser {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Boolean getFirstLogin() {
+        return firstLogin;
+    }
+
+    public void setFirstLogin(Boolean firstLogin) {
+        this.firstLogin = firstLogin;
     }
 
     @Override

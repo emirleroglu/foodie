@@ -3,6 +3,15 @@ package com.emirleroglu.foodie.payload.response;
 public class LoginResponse {
     UserResult result;
     Long id;
+    Boolean firstLogin;
+
+    public Boolean getFirstLogin() {
+        return firstLogin;
+    }
+
+    public void setFirstLogin(Boolean firstLogin) {
+        this.firstLogin = firstLogin;
+    }
 
     public LoginResponse(UserResult result, Long id) {
         this.result = result;

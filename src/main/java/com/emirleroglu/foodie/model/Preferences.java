@@ -1,6 +1,7 @@
 package com.emirleroglu.foodie.model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Preferences {
@@ -20,6 +21,8 @@ public class Preferences {
 
     @OneToOne(fetch = FetchType.EAGER)
     private AppUser appUser;
+    @OneToMany
+    private List<Ingredient> allergens;
 
     public Preferences() {
     }
@@ -33,6 +36,24 @@ public class Preferences {
         this.veryHealthy = veryHealthy;
         this.appUser = user;
 
+    }
+
+    public Preferences(Boolean vegetarian, Boolean vegan, Boolean glutenFree, Boolean dairyFree, Boolean veryHealthy, AppUser appUser, List<Ingredient> allergens) {
+        this.vegetarian = vegetarian;
+        this.vegan = vegan;
+        this.glutenFree = glutenFree;
+        this.dairyFree = dairyFree;
+        this.veryHealthy = veryHealthy;
+        this.appUser = appUser;
+        this.allergens = allergens;
+    }
+
+    public List<Ingredient> getAllergens() {
+        return allergens;
+    }
+
+    public void setAllergens(List<Ingredient> allergens) {
+        this.allergens = allergens;
     }
 
     public Boolean getVegetarian() {
