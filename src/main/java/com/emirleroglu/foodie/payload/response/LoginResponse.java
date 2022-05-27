@@ -13,9 +13,10 @@ public class LoginResponse {
         this.firstLogin = firstLogin;
     }
 
-    public LoginResponse(UserResult result, Long id) {
+    public LoginResponse(UserResult result, Long id, Boolean firstLogin) {
         this.result = result;
         this.id = id;
+        this.firstLogin = firstLogin;
     }
 
     public UserResult getResult() {

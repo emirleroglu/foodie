@@ -35,7 +35,7 @@ public class AppUserServiceImpl implements AppUserService {
             return UserResult.takenEmail;
         }
 
-        AppUser user = new AppUser(request.getUsername(), request.getEmail(), request.getPassword());
+        AppUser user = new AppUser(request.getUsername(), request.getEmail(), request.getPassword(),false);
         repository.save(user);
         return UserResult.Successful;
     }
@@ -44,12 +44,12 @@ public class AppUserServiceImpl implements AppUserService {
     public LoginResponse login(LoginRequest request) {
         Optional<AppUser> myUser = repository.findByUsername(request.getUsername());
         if (!myUser.isPresent()) {
-            return new LoginResponse(UserResult.UnknownUser, 0L);
+            return new LoginResponse(UserResult.UnknownUser, 0L,false);
         }
         if (Objects.equals(request.getPassword(), myUser.get().getPassword())) {
-            return new LoginResponse(UserResult.Successful, myUser.get().getId());
+            return new LoginResponse(UserResult.Successful, myUser.get().getId(),myUser.get().getFirstLogin());
         } else {
-            return new LoginResponse(UserResult.WrongPassword, 0L);
+            return new LoginResponse(UserResult.WrongPassword, 0L,false);
         }
 
 

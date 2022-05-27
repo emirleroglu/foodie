@@ -50,15 +50,15 @@ public class AuthController {
         if (result.getResult() == UserResult.WrongPassword) {
             return ResponseEntity
                     .badRequest()
-                    .body(new LoginResponse(result.getResult(), result.getId()));
+                    .body(new LoginResponse(result.getResult(), result.getId(),result.getFirstLogin()));
         }
         if (result.getResult() == UserResult.UnknownUser) {
             return ResponseEntity
                     .badRequest()
-                    .body(new LoginResponse(result.getResult(), result.getId()));
+                    .body(new LoginResponse(result.getResult(), result.getId(),result.getFirstLogin()));
         }
 
-        return ResponseEntity.ok(new LoginResponse(result.getResult(), result.getId()));
+        return ResponseEntity.ok(new LoginResponse(result.getResult(), result.getId(),result.getFirstLogin()));
     }
 
     @GetMapping("/contains")
