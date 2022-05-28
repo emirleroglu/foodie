@@ -1,6 +1,9 @@
 package com.emirleroglu.foodie.service.Impl;
 
+import com.emirleroglu.foodie.model.AppUser;
 import com.emirleroglu.foodie.model.Preferences;
+import com.emirleroglu.foodie.repository.AllergenRepository;
+import com.emirleroglu.foodie.repository.AppUserRepository;
 import com.emirleroglu.foodie.repository.PreferencesRepository;
 import com.emirleroglu.foodie.service.PreferencesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +14,12 @@ import java.util.Optional;
 @Service
 public class PreferencesServiceImpl implements PreferencesService {
     PreferencesRepository repository;
+    AppUserRepository userRepository;
 
     @Autowired
-    public PreferencesServiceImpl(PreferencesRepository repository) {
+    public PreferencesServiceImpl(PreferencesRepository repository, AppUserRepository userRepository) {
         this.repository = repository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -26,15 +31,11 @@ public class PreferencesServiceImpl implements PreferencesService {
 
     @Override
     public Preferences createPreferences(Preferences preferences) {
-        // Patlayabiliyor.
-        if (repository.existsByAppUserId(preferences.getAppUser().getId())) {
-            return null;
-        }
-
+        AppUser user = userRepository.getById(preferences.getAppUser().getId());
+        user.setFirstLogin(true);
+        userRepository.save(user);
         repository.save(preferences);
-
         return preferences;
-
     }
 
     @Override
