@@ -1,18 +1,21 @@
 package com.emirleroglu.foodie.controller;
 
 
+import com.emirleroglu.foodie.model.Ingredient;
+import com.emirleroglu.foodie.payload.request.IngredientRequest;
 import com.emirleroglu.foodie.payload.response.MessageResponse;
 import com.emirleroglu.foodie.service.FridgeNosqlService;
 import com.emirleroglu.foodie.service.Impl.FridgeNosqlServiceImp;
+import com.google.api.core.ApiFuture;
+import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.Firestore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -29,9 +32,15 @@ public class FridgeNosqlController {
         this.db = db;
     }
 
-    @GetMapping("getDeneme")
-    ResponseEntity<?> getDeneme() throws ExecutionException, InterruptedException, IOException {
-        serviceImp.addData(db);
+    @PostMapping("/addList")
+    ResponseEntity<?> addListByUserId(@RequestBody List<IngredientRequest> request) throws ExecutionException, InterruptedException, IOException {
+        serviceImp.addData(db, request);
         return ResponseEntity.ok(new MessageResponse("oldu galiba"));
+    }
+
+    @GetMapping("/getList")
+    ResponseEntity<?> getListByUsername(@RequestParam String username) {
+        Map<String, Object> data = serviceImp.getData(db, username);
+        return ResponseEntity.ok(data);
     }
 }
