@@ -40,7 +40,7 @@ public class FridgeNosqlServiceImp implements FridgeNosqlService {
     @Override
     public void addData(Firestore db, List<IngredientRequest> request) {
 
-        DocumentReference docRef = db.collection("users").document(request.get(0).getUsername());
+        DocumentReference docRef = db.collection("users").document(request.get(0).getFridgeID());
         Map<String, Object> data = new HashMap<>();
 
         for (IngredientRequest e : request) {
@@ -51,9 +51,9 @@ public class FridgeNosqlServiceImp implements FridgeNosqlService {
     }
 
     @Override
-    public Map<String, Object> getData(Firestore db, String username) {
+    public Map<String, Object> getData(Firestore db, String FridgeID) {
         try {
-            DocumentReference docRef = db.collection("users").document(username);
+            DocumentReference docRef = db.collection("users").document(FridgeID);
 
             ApiFuture<DocumentSnapshot> future = docRef.get();
 
