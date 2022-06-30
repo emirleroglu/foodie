@@ -3,16 +3,11 @@ package com.emirleroglu.foodie.service.Impl;
 import com.emirleroglu.foodie.payload.request.IngredientRequest;
 import com.emirleroglu.foodie.service.FridgeNosqlService;
 import com.google.api.core.ApiFuture;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.*;
 
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -38,16 +33,33 @@ public class FridgeNosqlServiceImp implements FridgeNosqlService {
     }
 
     @Override
-    public void addData(Firestore db, List<IngredientRequest> request) {
+    public void addData(Firestore db, List<IngredientRequest> request) throws ExecutionException, InterruptedException {
 
         DocumentReference docRef = db.collection("users").document(request.get(0).getFridgeID());
         Map<String, Object> data = new HashMap<>();
+        List<IngredientRequest> oldData=new ArrayList<>();
 
-        for (IngredientRequest e : request) {
-            data.put("Ingredient", request);
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+        DocumentSnapshot document = future.get();
+
+        if(document.exists()){
+            Object o= Objects.requireNonNull(document.getData()).get("Ingredient");
+            oldData= (List<IngredientRequest>) convertObjectToList(o);
         }
-
+        request.addAll(oldData);
+        data.put("Ingredient",request);
         ApiFuture<WriteResult> result = docRef.set(data);
+    }
+
+
+    public static List<?> convertObjectToList(Object obj) {
+        List<?> list = new ArrayList<>();
+        if (obj.getClass().isArray()) {
+            list = Arrays.asList((Object[])obj);
+        } else if (obj instanceof Collection) {
+            list = new ArrayList<>((Collection<?>)obj);
+        }
+        return list;
     }
 
     @Override

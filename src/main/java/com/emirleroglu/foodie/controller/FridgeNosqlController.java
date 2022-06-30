@@ -34,7 +34,7 @@ public class FridgeNosqlController {
 
     @PostMapping("/addList")
     ResponseEntity<?> addListByUserId(@RequestBody List<IngredientRequest> request) throws ExecutionException, InterruptedException, IOException {
-        serviceImp.addData(db, request);
+        serviceImp.addData(db,request);
         return ResponseEntity.ok(new MessageResponse("oldu galiba"));
     }
 
