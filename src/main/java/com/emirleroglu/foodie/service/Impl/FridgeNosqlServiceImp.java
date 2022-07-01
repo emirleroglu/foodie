@@ -1,14 +1,20 @@
 package com.emirleroglu.foodie.service.Impl;
 
 import com.emirleroglu.foodie.payload.request.IngredientRequest;
+import com.emirleroglu.foodie.payload.response.ConversionResponse;
 import com.emirleroglu.foodie.service.FridgeNosqlService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.mashape.unirest.http.Unirest;
+import okhttp3.*;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -54,23 +60,35 @@ public class FridgeNosqlServiceImp implements FridgeNosqlService {
             oldData= (List<IngredientRequest>) convertObjectToList(o);
         }
         request.addAll(oldData);
-       /* for (IngredientRequest request1:request) {
+        for (IngredientRequest request1:request) {
             data.put(request1.getName(), request);
-        }*/
+        }
         data.put("Ingredient",request);
         ApiFuture<WriteResult> result = docRef.set(data);
     }
 
     @Override
-    public void addData(Firestore db, IngredientRequest request) throws ExecutionException, InterruptedException {
+    public void addData(Firestore db, IngredientRequest request) throws ExecutionException, InterruptedException, IOException {
         Map<String, Object> data = new HashMap<>();
         DocumentReference docRef = db.collection("users").document(request.getFridgeID());
+        ApiFuture<DocumentSnapshot> future = docRef.get();
+        DocumentSnapshot document = future.get();
+        IngredientRequest temp= document.get(request.getName(),IngredientRequest.class);
+        ConversionResponse conversion;
+        if (temp != null) {
+            conversion = getResponse(request.getName(), temp.getPossibleUnit(), request.getPossibleUnit(), request.getAmount());
+            if(Objects.equals(temp.getName(), request.getName())) {
+                double diff=temp.getAmount() + conversion.getTargetAmount();
+                request.setAmount(diff);
+                request.setPossibleUnit(conversion.getTargetUnit());
+            }
+        }
         data.put(request.getName(),request);
-        ApiFuture<WriteResult> result = docRef.update(data);
+        ApiFuture<WriteResult> result = docRef.set(data,SetOptions.merge());
     }
 
     @Override
-    public Boolean checkAndUpdate(Firestore db, List<IngredientRequest> request) throws ExecutionException, InterruptedException {
+    public Boolean checkAndUpdate(Firestore db, List<IngredientRequest> request) throws ExecutionException, InterruptedException, IOException {
         Map<String, Object> data = new HashMap<>();
         DocumentReference docRef = db.collection("users").document(request.get(0).getFridgeID());
         ApiFuture<DocumentSnapshot> future = docRef.get();
@@ -78,13 +96,16 @@ public class FridgeNosqlServiceImp implements FridgeNosqlService {
         int counter=0;
         for (IngredientRequest req: request) {
            IngredientRequest temp= document.get(req.getName(),IngredientRequest.class);
-
-            if (temp != null && temp.getName().equals(req.getName())) {
-                double x=temp.getAmount()- req.getAmount();
-                if(x<0){
+            if(temp==null){
+                continue;
+            }
+            ConversionResponse conversion=getResponse(req.getName(), temp.getPossibleUnit(), req.getPossibleUnit(), req.getAmount());
+            if (temp.getName().equals(req.getName())) {
+                double diff=temp.getAmount()- conversion.getTargetAmount();
+                if(diff<0){
                     return false;
                 }
-                data.put(req.getName(),new IngredientRequest(req.getName(),req.getFridgeID(),req.getSpoonID(), req.getPossibleUnit(),x));
+                data.put(req.getName(),new IngredientRequest(req.getName(),req.getFridgeID(),req.getSpoonID(), conversion.getTargetUnit(), diff));
                 counter++;
             }
         }
@@ -105,6 +126,24 @@ public class FridgeNosqlServiceImp implements FridgeNosqlService {
             list = new ArrayList<>((Collection<?>)obj);
         }
         return list;
+    }
+
+    public ConversionResponse getResponse(String name,String targetUnit,String sourceUnit,double amount) throws IOException {
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        Request e = new Request.Builder()
+                .url("https://api.spoonacular.com/recipes/convert?apiKey=451e4340a6274c60ad61d133ef6798a0&ingredientName="+name+"&sourceAmount="+amount+"&targetUnit="+targetUnit+"&sourceUnit="+sourceUnit)
+                .get()
+                .build();
+
+
+        ObjectMapper mapper = new ObjectMapper();
+        ConversionResponse conversion=new ConversionResponse();
+        try (Response response = client.newCall(e).execute()) {
+            conversion = mapper.readValue(response.body().string(), ConversionResponse.class);
+        }
+        return conversion;
+
     }
 
     @Override
