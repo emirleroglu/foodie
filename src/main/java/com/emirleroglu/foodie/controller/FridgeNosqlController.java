@@ -43,4 +43,24 @@ public class FridgeNosqlController {
         Map<String, Object> data = serviceImp.getData(db, username);
         return ResponseEntity.ok(data);
     }
+    @PostMapping("/checkAndUpdateList")
+    ResponseEntity<?> checkAndUpdateListByUserId(@RequestBody List<IngredientRequest> request) throws ExecutionException, InterruptedException, IOException {
+        boolean resp= serviceImp.checkAndUpdate(db,request);
+        if(resp) {
+            return ResponseEntity.ok(new MessageResponse("Dolaptan malzemeler azaldı."));
+        }else {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Dolapta Yeterli malzeme yok."));
+        }
+
+    }
+    @PostMapping("/addListElement")
+    ResponseEntity<?> addListByUserId(@RequestBody IngredientRequest request) throws ExecutionException, InterruptedException, IOException {
+        serviceImp.addData(db,request);
+        return ResponseEntity.ok(new MessageResponse("oldu galiba"));
+    }
+
+
+
 }

@@ -10,7 +10,8 @@ import java.util.concurrent.ExecutionException;
 public interface FridgeNosqlService {
 
     void addData(Firestore db, List<IngredientRequest> request) throws ExecutionException, InterruptedException;
-
+    void addData(Firestore db, IngredientRequest request) throws ExecutionException, InterruptedException;
+    Boolean checkAndUpdate(Firestore db, List<IngredientRequest> request) throws ExecutionException, InterruptedException;
     Map<String, Object> getData(Firestore db, String username);
     public void addData(Firestore db);
 }
